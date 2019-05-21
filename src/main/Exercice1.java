@@ -7,17 +7,17 @@ public class Exercice1 {
 
     public static void main(String[] args) {
 
-        //Exercice1();
+        Exercice1();
 
-        //Exercice2();
+        Exercice2();
 
-        //Exercice3();
+        Exercice3();
 
-        //Exercice4();
+        Exercice4();
 
-        //Exercice5();
+        Exercice5();
 
-        //Exercice6();
+        Exercice6();
 
         Exercice7();
     }
@@ -29,18 +29,21 @@ public class Exercice1 {
 
         System.out.println();
         System.out.println("La clé no 24 donne le message décrypté \"WATCH OUT FOR BRUTUS\"");
+        addSpaces();
     }
 
     public static void Exercice2(){
         String CYPHERTEXT = "LCLLEWLJAZLNNZMVYIYLHRMHZA";
         Solver solver = new Solver();
         solver.CesarByFrequency(CYPHERTEXT);
+        addSpaces();
     }
 
     public static void Exercice3(){
         String CYPHERTEXT = "EDSGICKXHUKLZVEQZVKXWKZUKCVUB";
         Solver solver = new Solver();
         solver.AffineSolve(CYPHERTEXT, "IF");
+        addSpaces();
     }
 
     public static void Exercice4(){
@@ -52,6 +55,7 @@ public class Exercice1 {
         System.out.println();
         System.out.println("Le message est décrypté pour la B = 14.");
         solver.AffineSolve(CYPHERTEXT, 3, 14);
+        addSpaces();
     }
 
     public static void Exercice5(){
@@ -62,17 +66,26 @@ public class Exercice1 {
         solver.printVigenereSolution(ficelle, new int[]{13, 12, 22, 8});
         System.out.println();
         System.out.println("Le texte a pour particularité de ne pas contenir la lettre \"e\" et d'avoir comme lettre la plus fréquente le \"i\"." );
+        addSpaces();
     }
 
     public static void Exercice6(){
         String texte = "XKJUROWMLLPXWZNPIMBVBQJCNOWXPCCHHVVFVSLLFVXHAZITYXOHULXQOJAXELXZXMYJAQFSTSRULHHUCDSKBXKNJQIDALLPQALLUHIAQFPBPCIDSVCIHWHWEWTHBTXRLJNRSNCIHUVFFUXVOUKJLJSWMAQFVJWJSDYLJOGJXDBOXAJULTUCPZMPLIWMLUBZXVOODYBAFDSKXGQFADSHXNXEHSARUOJAQFPFKNDHSAAFVULLUWTAQFRUPWJRSZXGPFUTJQIYNRXNYNTWMHCUKJFBIRZSMEHHSJSHYONDDZZNTZMPLILRWNMWMLVURYONTHUHABWNVW";
         Solver solver = new Solver();
         solver.VigenereSolve(texte, 10, "e".charAt(0));
+        addSpaces();
     }
 
     public static void Exercice7(){
         Solver solver = new Solver();
             solver.HillSolve("ZIRKZWOPJJOPTFAPUHFHADRQ", new Matrix(new double[][]{{1,2,3,4},{4,3,2,1},{11,2,4,6},{2,9,6,4}}));
+        addSpaces();
     }
 
+    public static void addSpaces(){
+        System.out.println("\n");
+        System.out.println("======================================================================================================================================================");
+        System.out.println("======================================================================================================================================================");
+        System.out.println("\n");
+    }
 }

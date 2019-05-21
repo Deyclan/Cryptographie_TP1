@@ -185,6 +185,7 @@ public class Solver {
         while (run){
             System.out.println("Current indexes offset");
             printArray(currentIndexes);
+            System.out.println("Enter command or \"x\" to exit");
             System.out.println("[next (n)/previous (p)] [index]");
             String cmd = scanner.nextLine();
 
@@ -238,7 +239,6 @@ public class Solver {
         boolean run2 = true;
         int inverseDet = 1;
         while (run2){
-            System.out.println("(det * inverseDet) % 26  ?? " + (detInt * inverseDet) % 26);
             if (detInt < 0){
                 detInt += 26;
             }
@@ -329,4 +329,5 @@ public class Solver {
         }
         return copy;
     }
+
 }
