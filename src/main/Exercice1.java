@@ -1,6 +1,8 @@
 package main;
 
 
+import Jama.Matrix;
+
 public class Exercice1 {
 
     public static void main(String[] args) {
@@ -15,7 +17,9 @@ public class Exercice1 {
 
         //Exercice5();
 
-        Exercice6();
+        //Exercice6();
+
+        Exercice7();
     }
 
     public static void Exercice1(){
@@ -65,4 +69,10 @@ public class Exercice1 {
         Solver solver = new Solver();
         solver.VigenereSolve(texte, 10, "e".charAt(0));
     }
+
+    public static void Exercice7(){
+        Solver solver = new Solver();
+            solver.HillSolve("ZIRKZWOPJJOPTFAPUHFHADRQ", new Matrix(new double[][]{{1,2,3,4},{4,3,2,1},{11,2,4,6},{2,9,6,4}}));
+    }
+
 }

@@ -1,11 +1,11 @@
 package main;
 
+import Jama.Matrix;
 import utils.ToolBox;
 import utils.Tuple;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Solver {
@@ -228,6 +228,61 @@ public class Solver {
 
     }
 
+    public void HillSolve(String text, Matrix matrix){
+        Matrix invert = matrix.inverse();
+        double det = matrix.det();
+        invert = invert.times(det);
+
+        int detInt = (int)det;
+
+        boolean run2 = true;
+        int inverseDet = 1;
+        while (run2){
+            System.out.println("(det * inverseDet) % 26  ?? " + (detInt * inverseDet) % 26);
+            if (detInt < 0){
+                detInt += 26;
+            }
+            if ( (detInt * inverseDet) % 26 == 1 ){
+                run2 = false;
+            }else {
+                inverseDet++;
+            }
+        }
+
+        invert = invert.times(inverseDet);
+        double[][] doubleMatrix = invert.getArrayCopy();
+        doubleMatrix = moduloMatrix(doubleMatrix);
+
+        Matrix invertModulo = new Matrix(doubleMatrix);
+        StringBuilder stringBuilder = new StringBuilder();
+        int i = 0;
+        if (text.length() % doubleMatrix.length != 0){
+            int r = text.length() % doubleMatrix.length;
+            for(int uesh = 0; uesh < r ; uesh++) {
+                text = text.concat("x");
+            }
+        }
+
+        for(i = 0; i < text.length(); i += doubleMatrix.length){
+            String subSeq = text.substring(i, i+doubleMatrix.length);
+            double[] vect = new double[doubleMatrix.length];
+            for (int x = 0 ; x < subSeq.length() ; x++){
+                vect[x] = ToolBox.charToIndex(subSeq.charAt(x));
+            }
+            Matrix vector = new Matrix(vect,1);
+            Matrix result = vector.times(invertModulo);
+
+            double[][] resultDouble = result.getArray();
+            resultDouble = moduloMatrix(resultDouble);
+
+            for (int j = 0; j < resultDouble[0].length ; j++){
+                stringBuilder.append(ToolBox.indexToChar((int)resultDouble[0][j]));
+            }
+        }
+        System.out.println();
+        System.out.println(stringBuilder.toString());
+    }
+
     public void printVigenereSolution(String texte, int[] key){
         System.out.print("Key = [");
         for(int i : key){
@@ -253,5 +308,25 @@ public class Solver {
             System.out.print(i + " ");
         }
         System.out.println("]");
+    }
+
+    public Matrix moduloMatrix(Matrix matrix){
+        double[][] doubleMatrix = matrix.getArrayCopy();
+        moduloMatrix(doubleMatrix);
+        return new Matrix(doubleMatrix);
+    }
+
+    public double[][] moduloMatrix(double[][] matrix){
+        double[][] copy = matrix;
+        for (int i = 0; i< copy.length ; i++) {
+            for (int j = 0; j < copy[i].length ; j++){
+                copy[i][j] = (int)Math.round(copy[i][j]);
+                copy[i][j] = copy[i][j] %26;
+                if ((int)copy[i][j] < 0){
+                    copy[i][j] += 26;
+                }
+            }
+        }
+        return copy;
     }
 }
