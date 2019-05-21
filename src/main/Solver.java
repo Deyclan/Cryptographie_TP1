@@ -1,10 +1,12 @@
 package main;
 
 import utils.ToolBox;
+import utils.Tuple;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Solver {
 
@@ -15,17 +17,17 @@ public class Solver {
     }
 
     public void CesarByFrequency(String s){
-        Map<Character, Integer> map = ToolBox.getFrequencyPerCharacter(s);
+        List<Tuple<Character, Integer>> map = ToolBox.getFrequencyPerCharacter(s);
         //ToolBox.printMap(map);
         int currentMax = 0;
         List<Character> list = new ArrayList<>();
-        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
-            if (entry.getValue() > currentMax){
+        for (Tuple<Character, Integer> tuple : map) {
+            if (tuple.getValue() > currentMax){
                 list = new ArrayList<>();
-                currentMax = entry.getValue();
+                currentMax = tuple.getValue();
             }
-            if(entry.getValue() == currentMax){
-                list.add(entry.getKey());
+            if(tuple.getValue() == currentMax){
+                list.add(tuple.getKey());
             }
         }
         System.out.println("Lettre(s) les plus fréquentes : ");
@@ -116,10 +118,14 @@ public class Solver {
     }
 
     public void VigenereSolve(String texte, int maxKeyLength){
+        VigenereSolve(texte, maxKeyLength, "e".charAt(0));
+    }
+
+    public void VigenereSolve(String texte, int maxKeyLength, char mostFrequentLetter){
         int currentMaxMatch = 0;
         int currentKeyLength = 1;
 
-        for(int k = 0 ; k < maxKeyLength ; k++){
+        for(int k = 1 ; k < maxKeyLength ; k++){
             int tmpOccurence = 0;
             for (int i = 0 ; i < texte.length() - k; i++) {
                 if (texte.charAt(i) == texte.charAt(i+k)){
@@ -132,16 +138,120 @@ public class Solver {
             }
         }
 
-        List<StringBuilder> substrings = new ArrayList<>(currentKeyLength);
+        List<StringBuilder> substrings = new ArrayList<>();
+        for (int t = 0; t < currentKeyLength; t++){
+            substrings.add(new StringBuilder());
+        }
         for (int c = 0; c < texte.length() ; c++){
-            substrings.get(c % currentKeyLength).append(c);
+            substrings.get(c % currentKeyLength).append(texte.charAt(c));
         }
 
-        List<Map<Character, Integer>> frequencyMap = new ArrayList<>(currentKeyLength);
+
+        List<List<Tuple<Character, Integer>>> frequencyArray = new ArrayList<>();
+        for (int t = 0; t < currentKeyLength; t++){
+            frequencyArray.add(null);
+        }
         for (int i = 0 ; i < substrings.size(); i++ ) {
-            frequencyMap.set(i, ToolBox.getFrequencyPerCharacter(substrings.get(i).toString()));
+            frequencyArray.set(i, ToolBox.getFrequencyPerCharacter(substrings.get(i).toString()));
         }
 
+        List<int[]> listeDecalage = new ArrayList<>();
+        for (List<Tuple<Character, Integer>> tupleList : frequencyArray) {
+            int[] intArray = new int[tupleList.size()];
+            int index = 0;
+            for (Tuple<Character, Integer> tuple : tupleList){
+                int ecart = (ToolBox.charToIndex(mostFrequentLetter) - ToolBox.charToIndex(tuple.getKey())) % 26;
+                if (ecart < 0){
+                    ecart += 26;
+                }
+                intArray[index] = ecart;
+                index++;
+            }
+            listeDecalage.add(intArray);
+        }
 
+        int[] key = new int[listeDecalage.size()];
+        for (int i = 0 ; i<listeDecalage.size() ; i ++){
+            key[i] = listeDecalage.get(i)[0];
+        }
+        printVigenereSolution(texte, key);
+
+
+        System.out.println();
+        int[] currentIndexes = new int[currentKeyLength];
+
+        boolean run = true;
+        Scanner scanner = new Scanner(System.in);
+        while (run){
+            System.out.println("Current indexes offset");
+            printArray(currentIndexes);
+            System.out.println("[next (n)/previous (p)] [index]");
+            String cmd = scanner.nextLine();
+
+            if (cmd.equals("exit") || cmd.equals("x") || cmd.equals("stop")){
+                run = false;
+                break;
+            }else {
+                String[] cmdSplit = cmd.split(" ");
+                switch (cmdSplit[0]) {
+                    case "n":
+                        if (Integer.parseInt(cmdSplit[1]) > currentKeyLength) {
+                            System.out.println("Index out of bound");
+                        }else {
+                            currentIndexes[Integer.parseInt(cmdSplit[1])]++;
+                        }
+                        break;
+
+
+                    case "p":
+                        if (Integer.parseInt(cmdSplit[1]) > currentKeyLength) {
+                            System.out.println("Index out of bound");
+                        }else {
+                            if(currentIndexes[Integer.parseInt(cmdSplit[1])] > 0) {
+                                currentIndexes[Integer.parseInt(cmdSplit[1])]--;
+                            }
+                        }
+                        break;
+                    default:
+                        System.out.println("Unexpected command");
+                        break;
+                }
+            }
+
+            for (int i = 0 ; i<listeDecalage.size() ; i ++){
+                key[i] = listeDecalage.get(i)[currentIndexes[i]];
+            }
+
+            printVigenereSolution(texte, key);
+            System.out.println();
+        }
+
+    }
+
+    public void printVigenereSolution(String texte, int[] key){
+        System.out.print("Key = [");
+        for(int i : key){
+            System.out.print(i + " ");
+        }
+        System.out.println("]");
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int x = 0; x< texte.length() ; x++) {
+            int c = ToolBox.charToIndex(texte.charAt(x));
+            int ecart = key[x % key.length];
+
+            stringBuilder.append( ToolBox.indexToChar((c + ecart) % 26));
+        }
+        System.out.println("Decoded message : ");
+        System.out.println(stringBuilder.toString());
+    }
+
+    public void printArray(int[] intArray){
+        System.out.print("[ ");
+        for (int i: intArray) {
+            System.out.print(i + " ");
+        }
+        System.out.println("]");
     }
 }

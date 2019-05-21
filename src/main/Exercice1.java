@@ -1,8 +1,5 @@
 package main;
 
-import utils.ToolBox;
-
-import java.util.Map;
 
 public class Exercice1 {
 
@@ -16,12 +13,9 @@ public class Exercice1 {
 
         //Exercice4();
 
-        Map<Character, Integer> map = ToolBox.getFrequencyPerCharacter("TCABTIQMFHEQQMRMVMTMAQ");
-        ToolBox.printMap(map);
-        System.out.println();
-        Map<Character, Integer> map2 = ToolBox.sortByValue(map) ;
-        ToolBox.printMap(map2);
+        //Exercice5();
 
+        Exercice6();
     }
 
     public static void Exercice1(){
@@ -58,6 +52,17 @@ public class Exercice1 {
 
     public static void Exercice5(){
         String ficelle = "HDSFGVMKOOWAFWEETCMFTHSKUCAQBILGJOFMAQLGSPVATVXQBIRYSCPCFRMVSWRVNQLSZDMGAOQSAKMLUPSQFORVTWVDFCJZVGAOAOQSACJKBRSEVBELVBKSARLSCDCAARMNVRYSYWXQGVELLCYLUWWEOAFGCLAZOWAFOJDLHSSFIKSEPSOYWXAFOWLBFCSOCYLNGQSYZXGJBMLVGRGGOKGFGMHLMEJABSJVGMLNRVQZCRGGCRGHGEUPCYFGTYDYCJKHQLUHGXGZOVQSWPDVBWSFFSENBXAPASGAZMYUHGSFHMFTAYJXMWZNRSOFRSOAOPGAUAAARMFTQSMAHVQECEV";
+        Solver solver = new Solver();
+        //solver.VigenereSolve(ficelle, 6, "i".charAt(0));
+        System.out.println("Après beaucoup d'essai de combinaisons possible, nous avons trouvé le résultat suivant : ");
+        solver.printVigenereSolution(ficelle, new int[]{13, 12, 22, 8});
+        System.out.println();
+        System.out.println("Le texte a pour particularité de ne pas contenir la lettre \"e\" et d'avoir comme lettre la plus fréquente le \"i\"." );
+    }
 
+    public static void Exercice6(){
+        String texte = "XKJUROWMLLPXWZNPIMBVBQJCNOWXPCCHHVVFVSLLFVXHAZITYXOHULXQOJAXELXZXMYJAQFSTSRULHHUCDSKBXKNJQIDALLPQALLUHIAQFPBPCIDSVCIHWHWEWTHBTXRLJNRSNCIHUVFFUXVOUKJLJSWMAQFVJWJSDYLJOGJXDBOXAJULTUCPZMPLIWMLUBZXVOODYBAFDSKXGQFADSHXNXEHSARUOJAQFPFKNDHSAAFVULLUWTAQFRUPWJRSZXGPFUTJQIYNRXNYNTWMHCUKJFBIRZSMEHHSJSHYONDDZZNTZMPLILRWNMWMLVURYONTHUHABWNVW";
+        Solver solver = new Solver();
+        solver.VigenereSolve(texte, 10, "e".charAt(0));
     }
 }

@@ -1,8 +1,6 @@
 package utils;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ToolBox {
 
@@ -41,16 +39,23 @@ public class ToolBox {
         return builder.toString();
     }
 
-    public static Map<Character, Integer> getFrequencyPerCharacter(String s){
-        Map<Character, Integer> characterFloatMap = new HashMap<>();
+    public static List<Tuple<Character,Integer>> getFrequencyPerCharacter(String s){
+        List<Tuple<Character, Integer>> charIntMap = new ArrayList<>();
         for (int i = 0; i< s.length(); i++){
-            if (characterFloatMap.containsKey((Character)s.charAt(i))){
-                characterFloatMap.replace(s.charAt(i), characterFloatMap.get(s.charAt(i)), characterFloatMap.get(s.charAt(i))+ 1);
-            }else {
-                characterFloatMap.put(s.charAt(i), 1);
+            boolean isModified = false;
+            for (Tuple tuple: charIntMap) {
+                if (tuple.getKey().equals((Character)s.charAt(i))){
+                    tuple.setValue((Integer) tuple.getValue() + 1);
+                    isModified = true;
+                    break;
+                }
+            }
+            if(!isModified){
+                charIntMap.add(new Tuple<>((Character)s.charAt(i), 1));
             }
         }
-        return characterFloatMap;
+        Collections.sort(charIntMap, new TupleComparator());
+        return charIntMap;
     }
 
     public static void printMap(Map<Character, Integer> characterIntegerMap){
